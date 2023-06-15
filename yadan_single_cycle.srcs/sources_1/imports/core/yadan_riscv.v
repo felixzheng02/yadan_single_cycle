@@ -234,24 +234,24 @@ module yadan_riscv(
     assign  rom_addr_o  =  pc_pc_o;  // 指令存储器的输入地址就是 pc 的值
 
     // IF/ID 例化
-    if_id   u_if_id(
-        .clk(clk),
+//    if_id   u_if_id(
+//        .clk(clk),
+//        .rst(rst),
+//        .pc_i(pc_pc_o),
+//        .inst_i(rom_data_i),
+//        .ex_branch_flag_i(ctrl_branch_flag_o),
+
+//        .stalled(stall),
+
+//        .pc_o(if_id_pc_o),
+//        .inst_o(if_id_inst_o)
+//    );
+
+    // ID 例化 (working on this)
+    id  u_id(
         .rst(rst),
         .pc_i(pc_pc_o),
         .inst_i(rom_data_i),
-        .ex_branch_flag_i(ctrl_branch_flag_o),
-
-        .stalled(stall),
-
-        .pc_o(if_id_pc_o),
-        .inst_o(if_id_inst_o)
-    );
-
-    // ID 例化
-    id  u_id(
-        .rst(rst),
-        .pc_i(if_id_pc_o),
-        .inst_i(if_id_inst_o),
         
         // from regfile 模块的输入
         .reg1_data_i(reg1_data_o),
