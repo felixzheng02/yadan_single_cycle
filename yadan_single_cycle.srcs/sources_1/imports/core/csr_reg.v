@@ -43,19 +43,19 @@ module csr_reg(
     // read from ex
     input   wire[`DataAddrBus]  raddr_i,
 
-    //from interrupt
-    input wire interrupt_we_i,
-    input wire[`DataAddrBus]    interrupt_raddr_i,
-    input wire[`DataAddrBus]    interrupt_waddr_i,
-    input wire[`RegBus]         interrupt_data_i,
+//    //from interrupt
+//    input wire interrupt_we_i,
+//    input wire[`DataAddrBus]    interrupt_raddr_i,
+//    input wire[`DataAddrBus]    interrupt_waddr_i,
+//    input wire[`RegBus]         interrupt_data_i,
 
-    // to interrupt
-    output wire[`RegBus] interrupt_data_o,       // interrupt模块读寄存器数据
-    output wire[`RegBus] interrupt_csr_mtvec,   // mtvec
-    output wire[`RegBus] interrupt_csr_mepc,    // mepc
-    output wire[`RegBus] interrupt_csr_mstatus, // mstatus
+//    // to interrupt
+//    output wire[`RegBus] interrupt_data_o,       // interrupt模块读寄存器数据
+//    output wire[`RegBus] interrupt_csr_mtvec,   // mtvec
+//    output wire[`RegBus] interrupt_csr_mepc,    // mepc
+//    output wire[`RegBus] interrupt_csr_mstatus, // mstatus
 
-    output wire global_int_en_o,            // 全局中断使能标志
+//    output wire global_int_en_o,            // 全局中断使能标志
 
     // to ex
     output  wire[`RegBus]        rdata_o    // ex模块读寄存器数据
@@ -154,21 +154,21 @@ module csr_reg(
                         
                     end
                 endcase
-            end else if (interrupt_we_i == `WriteEnable) begin
-                case (interrupt_waddr_i[11:0])
-                    `CSR_MSTATUS: begin
-                        csr_mstatus <= interrupt_data_i ;//& `CSR_MSTATUS_MASK;
-                    end
-                    `CSR_MEPC: begin
-                        csr_mepc    <= interrupt_data_i ;//& `CSR_MEPC_MASK;
-                    end
-                    `CSR_MCAUSE: begin
-                        csr_mcause <= interrupt_data_i ;//& `CSR_MCAUSE_MASK;
-                    end
-                    default: begin
+//            end else if (interrupt_we_i == `WriteEnable) begin
+//                case (interrupt_waddr_i[11:0])
+//                    `CSR_MSTATUS: begin
+//                        csr_mstatus <= interrupt_data_i ;//& `CSR_MSTATUS_MASK;
+//                    end
+//                    `CSR_MEPC: begin
+//                        csr_mepc    <= interrupt_data_i ;//& `CSR_MEPC_MASK;
+//                    end
+//                    `CSR_MCAUSE: begin
+//                        csr_mcause <= interrupt_data_i ;//& `CSR_MCAUSE_MASK;
+//                    end
+//                    default: begin
                         
-                    end
-                endcase
+//                    end
+//                endcase
             end
         end
     end
@@ -227,7 +227,7 @@ module csr_reg(
     assign rdata_o = ((raddr_i[11:0] == waddr_i[11:0]) && (we_i == `WriteEnable))?wdata_i:rdata;  //数据相关，读的寄存器就是写的寄存器则返回写的值。
    
 
-    assign interrupt_data_o = ((interrupt_raddr_i[11:0] == interrupt_waddr_i[11:0]) && (interrupt_we_i == `WriteEnable))?interrupt_data_i:'h0;
+//    assign interrupt_data_o = ((interrupt_raddr_i[11:0] == interrupt_waddr_i[11:0]) && (interrupt_we_i == `WriteEnable))?interrupt_data_i:'h0;
 
 
 endmodule // csr_reg

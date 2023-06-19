@@ -145,15 +145,6 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PSRCDIR/sources_1/imports/core/interrupt_ctrl.v">
-        <FileInfo>
-          <Attr Name="ImportPath" Val="$PPRDIR/../yadan/module/core/interrupt_ctrl.v"/>
-          <Attr Name="ImportTime" Val="1686585561"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
       <File Path="$PSRCDIR/sources_1/imports/muldiv/long_slow_div_denom_reg.v">
         <FileInfo>
           <Attr Name="ImportPath" Val="$PPRDIR/../../yadan_single_cycle/module/core/muldiv/long_slow_div_denom_reg.v"/>
@@ -203,6 +194,16 @@
         <FileInfo>
           <Attr Name="ImportPath" Val="$PPRDIR/../yadan/module/core/yadan_riscv.v"/>
           <Attr Name="ImportTime" Val="1686585573"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/imports/core/interrupt_ctrl.v">
+        <FileInfo>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="ImportPath" Val="$PPRDIR/../yadan/module/core/interrupt_ctrl.v"/>
+          <Attr Name="ImportTime" Val="1686585561"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>

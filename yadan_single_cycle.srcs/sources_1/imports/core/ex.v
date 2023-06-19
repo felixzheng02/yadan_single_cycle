@@ -52,8 +52,8 @@ module ex(
     input   wire                muldiv_done,
     // input   wire[`RegAddrBus]   div_reg_waddr_i,
 
-    input wire int_assert_i,                // 中断发生标志
-    input wire[`InstAddrBus] int_addr_i,    // 中断跳转地址
+//    input wire int_assert_i,                // 中断发生标志
+//    input wire[`InstAddrBus] int_addr_i,    // 中断跳转地址
 
     //to mul/div
     output  reg                 muldiv_start_o,
@@ -91,13 +91,16 @@ module ex(
     reg[`InstAddrBus]       branch_addr;
     //寄存器
     assign  wd_o            =   wd;
-    assign  wreg_o          =   (int_assert_i == `INT_ASSERT)? `WriteDisable: wreg;
+//    assign  wreg_o          =   (int_assert_i == `INT_ASSERT)? `WriteDisable: wreg;
+    assign  wreg_o          =   wreg;
     assign  wdata_o         =   wdata;
 
 
 
-    assign  branch_flag_o   =   branch_flag ||  ((int_assert_i == `INT_ASSERT)? `BranchEnable: `BranchDisable);
-    assign  branch_addr_o   =   (int_assert_i == `INT_ASSERT)? int_addr_i: branch_addr;
+//    assign  branch_flag_o   =   branch_flag ||  ((int_assert_i == `INT_ASSERT)? `BranchEnable: `BranchDisable);
+    assign  branch_flag_o   =   branch_flag || `BranchDisable;
+//    assign  branch_addr_o   =   (int_assert_i == `INT_ASSERT)? int_addr_i: branch_addr; 
+    assign  branch_addr_o   =   branch_addr;
 
     // 相减结果
     wire[31:0]      exe_res_sub = reg1_i - reg2_i;
@@ -421,7 +424,8 @@ module ex(
     end
 
     // csrr
-	assign wcsr_reg_o =  (int_assert_i == `INT_ASSERT)? `WriteDisable   :   wcsr_reg_i;    
+//	assign wcsr_reg_o =  (int_assert_i == `INT_ASSERT)? `WriteDisable   :   wcsr_reg_i;    
+	assign wcsr_reg_o =   wcsr_reg_i;    
     assign wd_csr_reg_o = wd_csr_reg_i;
 
     always @ (*) begin

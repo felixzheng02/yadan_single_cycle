@@ -379,8 +379,8 @@ module yadan_riscv(
         .muldiv_done(muldiv_done),
         
         //中断
-        .int_assert_i(interrupt_int_assert_o),
-        .int_addr_i(interrupt_int_addr_o),
+//        .int_assert_i(interrupt_int_assert_o),
+//        .int_addr_i(interrupt_int_addr_o),
 
         //to mul_div
 
@@ -510,19 +510,19 @@ module yadan_riscv(
 
         .raddr_i(id_csr_reg_addr_o),
         
-        .rdata_o(csr_reg_data_o),
+        .rdata_o(csr_reg_data_o)
 
-        .interrupt_csr_mtvec  (csr_mtvec),
-        .interrupt_csr_mepc   (csr_mepc),
-        .interrupt_csr_mstatus(csr_mstatus),
+//        .interrupt_csr_mtvec  (csr_mtvec),
+//        .interrupt_csr_mepc   (csr_mepc),
+//        .interrupt_csr_mstatus(csr_mstatus),
 
-        .global_int_en_o(global_int_en),
+//        .global_int_en_o(global_int_en),
 
-        .interrupt_we_i(interrupt_we_o),
-        .interrupt_raddr_i(interrupt_raddr_o),
-        .interrupt_waddr_i(interrupt_waddr_o),
-        .interrupt_data_i(interrupt_data_o),
-        .interrupt_data_o(csr_interrupt_data_o)
+//        .interrupt_we_i(interrupt_we_o),
+//        .interrupt_raddr_i(interrupt_raddr_o),
+//        .interrupt_waddr_i(interrupt_waddr_o),
+//        .interrupt_data_i(interrupt_data_o),
+//        .interrupt_data_o(csr_interrupt_data_o)
     );
 
 
@@ -547,33 +547,33 @@ module yadan_riscv(
         .stalled_o(stall)
     );
 
-    // assign interrupt_int_assert_o = 1'b0;
-    // interrupt_ctrl模块例化
-   interrupt_ctrl u_interrupt_ctrl(
-       .clk(clk),
-       .rst(rst),
-       .global_int_en_i(global_int_en),  //
-       .int_flag_i(int_i),
-       .inst_i(id_inst_o),//
-       .inst_addr_i(id_pc_o), //
-       //.inst_ex_i(id_inst_o), //
-       .branch_flag_i(ctrl_branch_flag_o),
-       .branch_addr_i(ctrl_branch_addr_o),
-       .div_i(enable_in),//
-        
-       //.data_i(csr_interrupt_data_o),
-       .csr_mtvec  (csr_mtvec),
-       .csr_mepc   (csr_mepc),
-       .csr_mstatus(csr_mstatus),
-
-       .stallreq_interrupt_o(stallreq_from_interrupt),
-       .we_o(interrupt_we_o),
-       .waddr_o(interrupt_waddr_o),
-       .raddr_o(interrupt_raddr_o),
-       .data_o(interrupt_data_o),
-       .int_addr_o(interrupt_int_addr_o),
-       .int_assert_o(interrupt_int_assert_o)
-   );
+//    // assign interrupt_int_assert_o = 1'b0;
+//    // interrupt_ctrl模块例化
+//   interrupt_ctrl u_interrupt_ctrl(
+//       .clk(clk),
+//       .rst(rst),
+//       .global_int_en_i(global_int_en),  //
+//       .int_flag_i(int_i),
+//       .inst_i(id_inst_o),//
+//       .inst_addr_i(id_pc_o), //
+//       //.inst_ex_i(id_inst_o), //
+//       .branch_flag_i(ctrl_branch_flag_o),
+//       .branch_addr_i(ctrl_branch_addr_o),
+//       .div_i(enable_in),//
+//        
+//       //.data_i(csr_interrupt_data_o),
+//       .csr_mtvec  (csr_mtvec),
+//       .csr_mepc   (csr_mepc),
+//      .csr_mstatus(csr_mstatus),
+//
+//       .stallreq_interrupt_o(stallreq_from_interrupt),
+//      .we_o(interrupt_we_o),
+//       .waddr_o(interrupt_waddr_o),
+//       .raddr_o(interrupt_raddr_o),
+//       .data_o(interrupt_data_o),
+//       .int_addr_o(interrupt_int_addr_o),
+//       .int_assert_o(interrupt_int_assert_o)
+//   );
 
     cpu_ahb_if  u_if_cpu_ahb (
         .clk                     ( clk               ),
