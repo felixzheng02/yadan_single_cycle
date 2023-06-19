@@ -118,15 +118,6 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PSRCDIR/sources_1/imports/core/ctrl.v">
-        <FileInfo>
-          <Attr Name="ImportPath" Val="$PPRDIR/../yadan/module/core/ctrl.v"/>
-          <Attr Name="ImportTime" Val="1686585554"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
       <File Path="$PSRCDIR/sources_1/imports/core/ex.v">
         <FileInfo>
           <Attr Name="ImportPath" Val="$PPRDIR/../yadan/module/core/ex.v"/>
@@ -194,6 +185,16 @@
         <FileInfo>
           <Attr Name="ImportPath" Val="$PPRDIR/../yadan/module/core/yadan_riscv.v"/>
           <Attr Name="ImportTime" Val="1686585573"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/imports/core/ctrl.v">
+        <FileInfo>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="ImportPath" Val="$PPRDIR/../yadan/module/core/ctrl.v"/>
+          <Attr Name="ImportTime" Val="1686585554"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>

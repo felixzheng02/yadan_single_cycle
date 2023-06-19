@@ -40,8 +40,8 @@ module yadan_riscv(
       , input  wire  [31:0] jtag_wdata_i
       , output wire  [31:0] jtag_rdata_o
       //, output wire         jtag_done_o
-      , input  wire         jtag_stallreq_i
-      , input  wire         jtag_halt_i
+//      , input  wire         jtag_stallreq_i
+//      , input  wire         jtag_halt_i
       , input  wire         jtag_reset_i
 
       , output wire         M0_HBUSREQ     //主机0请求总线，1使能
@@ -133,7 +133,6 @@ module yadan_riscv(
     wire                muldiv_done;
 
     // mul_div_32 Inputs      
-    wire   enable_in;
     wire   [31 : 0]  dividend;        
     wire   [31 : 0]  divisor;        
     wire   mul0_div1;
@@ -143,14 +142,6 @@ module yadan_riscv(
     // mul_div_32 Outputs
     wire  enable_out;    
 
-
-    // ex to ctrl
-    wire                    ex_branch_flag_o;
-    wire[`RegBus]           ex_branch_addr_o;
-
-    wire                    ctrl_branch_flag_o;
-    wire[`RegBus]           ctrl_branch_addr_o;
-
     // csr_reg
     wire[`RegBus]           csr_reg_data_o;
     wire[`RegBus]           csr_interrupt_data_o;
@@ -158,8 +149,6 @@ module yadan_riscv(
     wire[`RegBus]         csr_mtvec;    
     wire[`RegBus]         csr_mepc;     
     wire[`RegBus]         csr_mstatus; 
-
-    wire global_int_en;
     
     // id to csr
     wire[`DataAddrBus]      id_csr_reg_addr_o;
@@ -195,37 +184,18 @@ module yadan_riscv(
     wire[`RegAddrBus]       id_reg2_addr_o;
     wire[`RegBus]           reg1_data_o;
     wire[`RegBus]           reg2_data_o;
-
-    // ctrl
-    wire[5:0]               stall;  
-
-    wire                    stallreq_from_id;
-    wire                    stallreq_from_mem;
-    wire                    stallreq_from_if;
-    wire                    stallreq_from_interrupt;
-
-
-    // interrupt模块输出信号
-    wire interrupt_we_o;
-    wire[`DataAddrBus] interrupt_waddr_o;
-    wire[`DataAddrBus] interrupt_raddr_o;
-    wire[`RegBus] interrupt_data_o;
-    wire[`InstAddrBus] interrupt_int_addr_o;
-    wire interrupt_int_assert_o;
-
-    //assign     stallreq_from_mem = ram_ce_o; 
     
     // pc_reg 例化
     pc_reg  u_pc_reg(
         .clk(clk),
         .rst(rst),
         .PCchange_enable(~ram_ce_o),
-        .branch_flag_i(ctrl_branch_flag_o),
-        .branch_addr_i(ctrl_branch_addr_o),
+//        .branch_flag_i(ctrl_branch_flag_o),
+//        .branch_addr_i(ctrl_branch_addr_o),
 
         .jtag_reset_i(jtag_reset_i),
 
-        .stalled(stall),
+//        .stalled(stall),
 
         .pc_o(pc_pc_o),
         .ce_o(rom_ce_o)
@@ -261,7 +231,7 @@ module yadan_riscv(
         .ex_wreg_i(ex_wreg_o),
         .ex_wdata_i(ex_wdata_o),
         .ex_wd_i(ex_wd_o),
-        .ex_branch_flag_i(ex_branch_flag_o),
+//        .ex_branch_flag_i(ex_branch_flag_o),
 
         .ex_aluop_i(ex_aluop_o),
 
@@ -280,7 +250,7 @@ module yadan_riscv(
         .reg1_addr_o(id_reg1_addr_o),
         .reg2_addr_o(id_reg2_addr_o),
 
-        .stallreq(stallreq_from_id),
+//        .stallreq(stallreq_from_id),
 
         .pc_o(id_pc_o),
         .inst_o(id_inst_o),
@@ -384,7 +354,7 @@ module yadan_riscv(
 
         //to mul_div
 
-        .muldiv_start_o(enable_in),
+//        .muldiv_start_o(enable_in),
         .muldiv_dividend_o(dividend),
         .muldiv_divisor_o(divisor),
         .mul_or_div(mul0_div1),
@@ -403,17 +373,17 @@ module yadan_riscv(
         // to csr reg
         .wcsr_reg_o(ex_wcsr_reg_o),
         .wd_csr_reg_o(ex_wd_csr_reg_o),
-        .wcsr_data_o(ex_wcsr_data_o),
+        .wcsr_data_o(ex_wcsr_data_o)
 
         // ex to ctrl
-        .branch_flag_o(ex_branch_flag_o),
-        .branch_addr_o(ex_branch_addr_o)
+//        .branch_flag_o(ex_branch_flag_o),
+//        .branch_addr_o(ex_branch_addr_o)
     );
 
     mul_div_32  u_mul_div_32 (
         .clk                     ( clk                   ),
         .reset_n                 ( rst                  ),
-        .enable_in               ( enable_in             ),
+//        .enable_in               ( enable_in             ),
         .x                       ( dividend              ),
         .y                       ( divisor               ),
         .mul0_div1               ( mul0_div1             ),
@@ -526,26 +496,26 @@ module yadan_riscv(
     );
 
 
-    // ctrl 
-    ctrl    u_ctrl(
-        .rst(rst),
-        .stallreq_from_id(stallreq_from_id),
-        .stallreq_from_ex(enable_in),
-        .stallreq_from_mem(stallreq_from_mem),
-        .stallreq_from_if(stallreq_from_if),
-        .stallreq_from_interrupt(stallreq_from_interrupt),
-        .stallreq_from_jtag(jtag_stallreq_i),
+//    // ctrl 
+//    ctrl    u_ctrl(
+//        .rst(rst),
+//        .stallreq_from_id(stallreq_from_id),
+//        .stallreq_from_ex(enable_in),
+//        .stallreq_from_mem(stallreq_from_mem),
+//        .stallreq_from_if(stallreq_from_if),
+//        .stallreq_from_interrupt(stallreq_from_interrupt),
+//        .stallreq_from_jtag(jtag_stallreq_i),
 
-        .branch_flag_i(ex_branch_flag_o),
-        .branch_addr_i(ex_branch_addr_o),
+//        .branch_flag_i(ex_branch_flag_o),
+//        .branch_addr_i(ex_branch_addr_o),
 
-        .jtag_halt_i(jtag_halt_i),
+//        .jtag_halt_i(jtag_halt_i),
 
-        // ctrl to pc_reg
-        .branch_flag_o(ctrl_branch_flag_o),
-        .branch_addr_o(ctrl_branch_addr_o),
-        .stalled_o(stall)
-    );
+//        // ctrl to pc_reg
+//        .branch_flag_o(ctrl_branch_flag_o),
+//        .branch_addr_o(ctrl_branch_addr_o),
+//        .stalled_o(stall)
+//    );
 
 //    // assign interrupt_int_assert_o = 1'b0;
 //    // interrupt_ctrl模块例化
@@ -593,8 +563,8 @@ module yadan_riscv(
         .M_HSIZE                 ( M1_HSIZE           ),
         .M_HBURST                ( M1_HBURST          ),
         .M_HWRITE                ( M1_HWRITE          ),
-        .M_HWDATA                ( M1_HWDATA          ),
-        .stallreq                ( stallreq_from_if   )
+        .M_HWDATA                ( M1_HWDATA          )
+//        .stallreq                ( stallreq_from_if   )
 );
 
     cpu_ahb_mem  u_mem_cpu_ahb (
@@ -616,8 +586,8 @@ module yadan_riscv(
         .M_HSIZE                 ( M0_HSIZE           ),
         .M_HBURST                ( M0_HBURST          ),
         .M_HWRITE                ( M0_HWRITE          ),
-        .M_HWDATA                ( M0_HWDATA          ),
-        .stallreq                ( stallreq_from_mem          )
+        .M_HWDATA                ( M0_HWDATA          )
+//        .stallreq                ( stallreq_from_mem          )
 );
 
 

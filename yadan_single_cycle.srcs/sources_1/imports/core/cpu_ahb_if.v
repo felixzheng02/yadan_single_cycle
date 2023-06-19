@@ -63,7 +63,7 @@ module cpu_ahb_if
    ,    output  reg  [31:0]         M_HWDATA   
 
         //È¥ctrlÄ£¿é
-   ,    output  reg                 stallreq
+//   ,    output  reg                 stallreq
 
 );
     
@@ -91,7 +91,7 @@ module cpu_ahb_if
             M_HWRITE    = 1'b0;
             M_HWDATA    = `ZeroWord;
             nxt_state   =  IDLE;
-            stallreq    =   1'b0;
+//            stallreq    =   1'b0;
         end
         else begin
             M_HSIZE     =   cpu_sel_i;
@@ -108,20 +108,20 @@ module cpu_ahb_if
                 IDLE :begin
 
                     if (cpu_ce_i) begin
-                        stallreq    =   1'b1;   
+//                        stallreq    =   1'b1;   
                         
                         M_HBUSREQ   =   1'b1;
                         nxt_state   =   WAIT;
                     end
                     else begin
-                        stallreq    =   1'b1; 
+//                        stallreq    =   1'b1; 
                         M_HBUSREQ   =   1'b0;
                         nxt_state   =   IDLE;
                     end
                 end 
                 WAIT:begin 
                     if (cpu_ce_i) begin
-                        stallreq    =   1'b1;
+//                        stallreq    =   1'b1;
                         M_HBUSREQ   =   1'b1;
                        if (M_HGRANT) begin
                             nxt_state = CONTROL ;
@@ -131,7 +131,7 @@ module cpu_ahb_if
                         end                 
                     end
                     else begin
-                        stallreq    =   1'b1;
+//                        stallreq    =   1'b1;
                         M_HBUSREQ   =   1'b0;
                         nxt_state   =   IDLE;
                     end
@@ -139,12 +139,12 @@ module cpu_ahb_if
                 end 
                 CONTROL:begin 
                     if (cpu_ce_i) begin
-                        stallreq    =   1'b1;
+//                        stallreq    =   1'b1;
                         M_HBUSREQ   =   1'b1;
                         nxt_state =  ENDS;
                     end
                     else begin
-                        stallreq    =   1'b1;
+//                        stallreq    =   1'b1;
                         M_HBUSREQ   =   1'b0;
                         nxt_state   =   IDLE;
                     end     
@@ -152,7 +152,7 @@ module cpu_ahb_if
                 ENDS:begin
                     
                     if (cpu_ce_i) begin
-                        stallreq    =   1'b0;
+//                        stallreq    =   1'b0;
                         M_HBUSREQ   =   1'b1; 
                         nxt_state   =  ENDS;
                         if (cpu_we_i == `WriteEnable) begin
@@ -163,7 +163,7 @@ module cpu_ahb_if
                         end
                     end                       
                     else begin
-                        stallreq    =   1'b1;
+//                        stallreq    =   1'b1;
                         M_HBUSREQ   =   1'b0;
                         nxt_state   =   IDLE; 
                          
@@ -172,7 +172,7 @@ module cpu_ahb_if
                 end
                 default: begin
                    M_HBUSREQ    = 1'b0; 
-                    stallreq    = 1'b0;
+//                    stallreq    = 1'b0;
                     nxt_state   = IDLE;
                 end
             endcase
