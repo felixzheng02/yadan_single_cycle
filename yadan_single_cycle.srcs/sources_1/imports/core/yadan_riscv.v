@@ -233,7 +233,7 @@ module yadan_riscv(
 
     assign  rom_addr_o  =  pc_pc_o;  // 指令存储器的输入地址就是 pc 的值
 
-    // IF/ID 例化
+//    // IF/ID 例化
 //    if_id   u_if_id(
 //        .clk(clk),
 //        .rst(rst),
@@ -247,7 +247,7 @@ module yadan_riscv(
 //        .inst_o(if_id_inst_o)
 //    );
 
-    // ID 例化 (working on this)
+    // ID 例化
     id  u_id(
         .rst(rst),
         .pc_i(pc_pc_o),
@@ -263,7 +263,7 @@ module yadan_riscv(
         .ex_wd_i(ex_wd_o),
         .ex_branch_flag_i(ex_branch_flag_o),
 
-        .ex_aluop_i(ex_mem_aluop_o),
+        .ex_aluop_i(ex_aluop_o),
 
         // from wd mem
         .mem_wreg_i     (mem_wreg_o),
@@ -303,9 +303,9 @@ module yadan_riscv(
         .clk(clk),
         .rst(rst),
         //.int_assert_i(interrupt_int_assert_o),
-        .we_i(wb_wreg_i),
-        .waddr_i(wb_wd_i),
-        .wdata_i(wb_wdata_i),
+        .we_i(mem_wreg_o),
+        .waddr_i(mem_wd_o),
+        .wdata_i(mem_wdata_o),
 
         .re1_i(id_reg1_read_o),
         .raddr1_i(id_reg1_addr_o),
@@ -321,58 +321,58 @@ module yadan_riscv(
         // .jtag_done_o(jtag_done_o)
     );
 
-    // ID/EX 例化
-    id_ex   u_id_ex(
-        .clk(clk),
-        .rst(rst),
-
-        // 从译码阶段 ID 模块来的信息
-        .id_pc_i(id_pc_o),
-        .id_inst_i(id_inst_o),
-        .id_aluop(id_aluop_o),
-        .id_alusel(id_alusel_o),
-        .id_reg1(id_reg1_o),
-        .id_reg2(id_reg2_o),
-        .id_wd(id_wd_o),
-        .id_wreg(id_wreg_o),
-        .id_wcsr_reg(id_wcsr_reg_o),
-        .id_csr_reg(id_csr_reg_o),
-        .id_wd_csr_reg(id_wd_csr_reg_o),
-
-        //.ex_branch_flag_i(ctrl_branch_flag_o),
-
-        .stalled(stall),
-
-        // 传递到执行阶段 EX 模块的信息
-        .ex_pc_o(ex_pc_i),
-        .ex_inst_o(ex_inst_i),
-        .ex_aluop(ex_aluop_i),
-        .ex_alusel(ex_alusel_i),
-        .ex_reg1(ex_reg1_i),
-        .ex_reg2(ex_reg2_i),
-        .ex_wd(ex_wd_i),
-        .ex_wreg(ex_wreg_i),
-        .ex_wcsr_reg(ex_wcsr_reg_i),
-        .ex_csr_reg(ex_csr_reg_i),
-        .ex_wd_csr_reg(ex_wd_csr_reg_i)
-    );
+//    // ID/EX 例化
+//    id_ex   u_id_ex(
+//        .clk(clk),
+//        .rst(rst),
+//
+//        // 从译码阶段 ID 模块来的信息
+//        .id_pc_i(id_pc_o),
+//        .id_inst_i(id_inst_o),
+//        .id_aluop(id_aluop_o),
+//        .id_alusel(id_alusel_o),
+//        .id_reg1(id_reg1_o),
+//        .id_reg2(id_reg2_o),
+//        .id_wd(id_wd_o),
+//        .id_wreg(id_wreg_o),
+//        .id_wcsr_reg(id_wcsr_reg_o),
+//       .id_csr_reg(id_csr_reg_o),
+//        .id_wd_csr_reg(id_wd_csr_reg_o),
+//
+//        //.ex_branch_flag_i(ctrl_branch_flag_o),
+//
+//        .stalled(stall),
+//
+//        // 传递到执行阶段 EX 模块的信息
+//        .ex_pc_o(ex_pc_i),
+//        .ex_inst_o(ex_inst_i),
+//        .ex_aluop(ex_aluop_i),
+//        .ex_alusel(ex_alusel_i),
+//        .ex_reg1(ex_reg1_i),
+//        .ex_reg2(ex_reg2_i),
+//        .ex_wd(ex_wd_i),
+//        .ex_wreg(ex_wreg_i),
+//        .ex_wcsr_reg(ex_wcsr_reg_i),
+//        .ex_csr_reg(ex_csr_reg_i),
+//        .ex_wd_csr_reg(ex_wd_csr_reg_i)
+//    );
 
     // EX 模块例化
     ex  u_ex(
         .rst(rst),
 
         // 从 ID/EX 模块来的信息
-        .ex_pc(ex_pc_i),
-        .ex_inst(ex_inst_i),
-        .aluop_i(ex_aluop_i),
-        .alusel_i(ex_alusel_i),
-        .reg1_i(ex_reg1_i),
-        .reg2_i(ex_reg2_i),
-        .wd_i(ex_wd_i),
-        .wreg_i(ex_wreg_i),
-        .wcsr_reg_i(ex_wcsr_reg_i),
-        .csr_reg_i(ex_csr_reg_i),
-        .wd_csr_reg_i(ex_wd_csr_reg_i),
+        .ex_pc(id_pc_o),
+        .ex_inst(id_inst_o),
+        .aluop_i(id_aluop_o),
+        .alusel_i(id_alusel_o),
+        .reg1_i(id_reg1_o),
+        .reg2_i(id_reg2_o),
+        .wd_i(id_wd_o),
+        .wreg_i(id_wreg_o),
+        .wcsr_reg_i(id_wcsr_reg_o),
+        .csr_reg_i(id_csr_reg_o),
+        .wd_csr_reg_i(id_wd_csr_reg_o),
         
         //from mul_div
         .muldiv_result_i(muldiv_result_i),
@@ -396,9 +396,9 @@ module yadan_riscv(
         .wreg_o(ex_wreg_o),
         .wdata_o(ex_wdata_o),
 
-        .ex_aluop_o(ex_mem_aluop_o),
+        .ex_aluop_o(ex_aluop_o),
         .ex_mem_addr_o(ex_addr_o),
-        .ex_reg2_o(ex_mem_reg2_o),
+        .ex_reg2_o(ex_reg2_o),
 
         // to csr reg
         .wcsr_reg_o(ex_wcsr_reg_o),
@@ -425,44 +425,44 @@ module yadan_riscv(
     );
 
 
-    // EX/MEM 例化
-    ex_mem  u_ex_mem(
-        .clk(clk),
-        .rst(rst),
-
-        // 从执行阶段 EX 来的信息
-        .ex_wd(ex_wd_o),
-        .ex_wreg(ex_wreg_o),
-        .ex_wdata(ex_wdata_o),
-
-        .ex_aluop_i(ex_mem_aluop_o),
-        .ex_mem_addr_i(ex_addr_o),
-        .ex_reg2_i(ex_mem_reg2_o),
-
-        .stalled(stall),
-
-        // 送到访存阶段的  MEM 信息
-        .mem_wd(mem_wd_i),
-        .mem_wreg(mem_wreg_i),
-        .mem_wdata(mem_wdata_i),
-
-        .mem_aluop(mem_aluop_i),
-        .mem_mem_addr(mem_mem_addr_i),
-        .mem_reg2(mem_reg2_i)
-    );
+//    // EX/MEM 例化
+//    ex_mem  u_ex_mem(
+//        .clk(clk),
+//        .rst(rst),
+//
+//        // 从执行阶段 EX 来的信息
+//        .ex_wd(ex_wd_o),
+//        .ex_wreg(ex_wreg_o),
+//        .ex_wdata(ex_wdata_o),
+//
+//        .ex_aluop_i(ex_mem_aluop_o),
+//        .ex_mem_addr_i(ex_addr_o),
+//        .ex_reg2_i(ex_mem_reg2_o),
+//
+//        .stalled(stall),
+//
+//        // 送到访存阶段的  MEM 信息
+//        .mem_wd(mem_wd_i),
+//        .mem_wreg(mem_wreg_i),
+//        .mem_wdata(mem_wdata_i),
+//
+//        .mem_aluop(mem_aluop_i),
+//       .mem_mem_addr(mem_mem_addr_i),
+//        .mem_reg2(mem_reg2_i)
+//    );
 
     // MEM 例化
     mem u_mem(
         .rst(rst),
 
         // 来自 EX/MEM 模块的信息
-        .wd_i(mem_wd_i),
-        .wreg_i(mem_wreg_i),
-        .wdata_i(mem_wdata_i),
+        .wd_i(ex_wd_o),
+        .wreg_i(ex_wreg_o),
+        .wdata_i(ex_wdata_o),
 
-        .mem_aluop_i(mem_aluop_i),
-        .mem_mem_addr_i(mem_mem_addr_i),
-        .mem_reg2_i(mem_reg2_i),
+        .mem_aluop_i(ex_aluop_o),
+        .mem_mem_addr_i(ex_addr_o),
+        .mem_reg2_i(ex_reg2_o),
 
         //.int_assert_i(interrupt_int_assert_o),
         // 送到 MEM/WB 的信息
@@ -481,23 +481,23 @@ module yadan_riscv(
         .mem_ce_o(ram_ce_o)
     );
 
-    // MEM/WB 例化
-    mem_wb  u_mem_wb(
-        .clk(clk),
-        .rst(rst),
-
-        // 来自访存阶段 MEM 信息
-        .mem_wd(mem_wd_o),
-        .mem_wreg(mem_wreg_o),
-        .mem_wdata(mem_wdata_o),
-
-        .stalled(stall),
-
-        // 送到回写阶段的信息 to id/regsfile
-        .wb_wd(wb_wd_i),
-        .wb_wreg(wb_wreg_i),
-        .wb_wdata(wb_wdata_i)
-    );
+//    // MEM/WB 例化
+//    mem_wb  u_mem_wb(
+//        .clk(clk),
+//        .rst(rst),
+//
+//        // 来自访存阶段 MEM 信息
+//        .mem_wd(mem_wd_o),
+//        .mem_wreg(mem_wreg_o),
+//        .mem_wdata(mem_wdata_o),
+//
+//        .stalled(stall),
+//
+//        // 送到回写阶段的信息 to id/regsfile
+//        .wb_wd(wb_wd_i),
+//        .wb_wreg(wb_wreg_i),
+//        .wb_wdata(wb_wdata_i)
+//    );
 
     // csr_reg
     csr_reg     u_csr_reg(

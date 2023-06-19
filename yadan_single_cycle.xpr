@@ -3,7 +3,7 @@
 <!--                                                         -->
 <!-- Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.   -->
 
-<Project Version="7" Minor="54" Path="D:/yadan_single_cycle/yadan_single_cycle.xpr">
+<Project Version="7" Minor="54" Path="C:/Users/VeriMake_C1/Desktop/yadan_single_cycle/yadan_single_cycle.xpr">
   <DefaultLaunch Dir="$PRUNDIR"/>
   <Configuration>
     <Option Name="Id" Val="30e9a09b2d0d4643a5c41b94de13727e"/>
@@ -136,28 +136,10 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
-      <File Path="$PSRCDIR/sources_1/imports/core/ex_mem.v">
-        <FileInfo>
-          <Attr Name="ImportPath" Val="$PPRDIR/../yadan/module/core/ex_mem.v"/>
-          <Attr Name="ImportTime" Val="1686585550"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
       <File Path="$PSRCDIR/sources_1/imports/core/id.v">
         <FileInfo>
           <Attr Name="ImportPath" Val="$PPRDIR/../yadan/module/core/id.v"/>
           <Attr Name="ImportTime" Val="1686585557"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PSRCDIR/sources_1/imports/core/id_ex.v">
-        <FileInfo>
-          <Attr Name="ImportPath" Val="$PPRDIR/../yadan/module/core/id_ex.v"/>
-          <Attr Name="ImportTime" Val="1686585547"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -185,15 +167,6 @@
         <FileInfo>
           <Attr Name="ImportPath" Val="$PPRDIR/../yadan/module/core/mem.v"/>
           <Attr Name="ImportTime" Val="1686585563"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PSRCDIR/sources_1/imports/core/mem_wb.v">
-        <FileInfo>
-          <Attr Name="ImportPath" Val="$PPRDIR/../yadan/module/core/mem_wb.v"/>
-          <Attr Name="ImportTime" Val="1686585562"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -230,6 +203,36 @@
         <FileInfo>
           <Attr Name="ImportPath" Val="$PPRDIR/../yadan/module/core/yadan_riscv.v"/>
           <Attr Name="ImportTime" Val="1686585573"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/imports/core/mem_wb.v">
+        <FileInfo>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="ImportPath" Val="$PPRDIR/../yadan/module/core/mem_wb.v"/>
+          <Attr Name="ImportTime" Val="1686585562"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/imports/core/ex_mem.v">
+        <FileInfo>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="ImportPath" Val="$PPRDIR/../yadan/module/core/ex_mem.v"/>
+          <Attr Name="ImportTime" Val="1686585550"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
+      <File Path="$PSRCDIR/sources_1/imports/core/id_ex.v">
+        <FileInfo>
+          <Attr Name="AutoDisabled" Val="1"/>
+          <Attr Name="ImportPath" Val="$PPRDIR/../yadan/module/core/id_ex.v"/>
+          <Attr Name="ImportTime" Val="1686585547"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>

@@ -31,6 +31,8 @@ SOFTWARE.
 
 
 module csr_reg(
+    // control/status register
+    // uses comparison flags to decide branch decision
     input   wire                clk,
     input   wire                rst,
 
