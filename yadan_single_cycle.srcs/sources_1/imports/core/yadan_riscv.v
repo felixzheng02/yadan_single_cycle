@@ -46,13 +46,15 @@ module yadan_riscv(
     wire[`InstAddrBus]      id_rom_pc;
     wire[`RegBus]           reg_id_data_1;
     wire[`RegBus]           reg_id_data_2;
+    wire                    ctrl_pc_branchflag;
+    wire[`RegBus]           ctrl_pc_branchaddr;
     
     // pc_reg Àý»¯
     pc_reg  u_pc_reg(
         .clk(clk),
         .rst(rst),
-        .branch_flag_i(ctrl_branch_flag_o),
-        .branch_addr_i(ctrl_branch_addr_o),
+        .branch_flag_i(ctrl_pc_branchflag),
+        .branch_addr_i(ctrl_pc_branchaddr),
         .pc_o(pc)
     );
     
@@ -152,6 +154,9 @@ module yadan_riscv(
     wire                    ex_csr_write;
     wire[`DataAddrBus]      ex_csr_addr;
     wire[`RegBus]           ex_csr_data;
+    // ex/ctrl
+    wire                    ex_ctrl_branchflag;
+    wire[`RegBus]           ex_ctrl_branchaddr;
 
     // EX Ä£¿éÀý»¯
     ex  u_ex(
@@ -188,7 +193,10 @@ module yadan_riscv(
         // to csr reg
         .wcsr_reg_o(ex_csr_write),
         .wd_csr_reg_o(ex_csr_addr),
-        .wcsr_data_o(ex_csr_data)
+        .wcsr_data_o(ex_csr_data),
+        // to ctrl
+        .branch_flag_o(ex_ctrl_branchflag),
+        .branch_addr_o(ex_ctrl_branchaddr)
     );
 
     mul_div_32  u_mul_div_32 (
@@ -251,11 +259,11 @@ module yadan_riscv(
     
     ctrl u_ctrl(
         .rst(rst),
-        .branch_flag_i(ex_branch_flag_o),
-        .branch_addr_i(ex_branch_addr_o),
+        .branch_flag_i(ex_ctrl_branchflag),
+        .branch_addr_i(ex_ctrl_branchaddr),
         // ctrl to pc_reg
-        .branch_flag_o(ctrl_branch_flag_o),
-        .branch_addr_o(ctrl_branch_addr_o)
+        .branch_flag_o(ctrl_pc_branchflag),
+        .branch_addr_o(ctrl_pc_branchaddr)
     );
     
     rom instr_mem(
