@@ -1,0 +1,29 @@
+Vivado Simulator 2020.2
+Copyright 1986-1999, 2001-2020 Xilinx, Inc. All Rights Reserved.
+Running: C:/Xilinx/Vivado/2020.2/bin/unwrapped/win64.o/xelab.exe -wto 30e9a09b2d0d4643a5c41b94de13727e --incr --debug typical --relax --mt 2 -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip --snapshot yadan_riscv_behav xil_defaultlib.yadan_riscv xil_defaultlib.glbl -log elaborate.log 
+Using 2 slave threads.
+Starting static elaboration
+Pass Through NonSizing Optimizer
+WARNING: [VRFC 10-3091] actual bit length 1 differs from formal bit length 6 for port 'ex_aluop_i' [C:/Users/VeriMake_C1/Desktop/yadan_single_cycle/yadan_single_cycle.srcs/sources_1/imports/core/yadan_riscv.v:175]
+WARNING: [VRFC 10-3091] actual bit length 1 differs from formal bit length 6 for port 'ex_aluop_o' [C:/Users/VeriMake_C1/Desktop/yadan_single_cycle/yadan_single_cycle.srcs/sources_1/imports/core/yadan_riscv.v:263]
+WARNING: [VRFC 10-3091] actual bit length 1 differs from formal bit length 32 for port 'ex_reg2_o' [C:/Users/VeriMake_C1/Desktop/yadan_single_cycle/yadan_single_cycle.srcs/sources_1/imports/core/yadan_riscv.v:265]
+WARNING: [VRFC 10-3091] actual bit length 1 differs from formal bit length 6 for port 'mem_aluop_i' [C:/Users/VeriMake_C1/Desktop/yadan_single_cycle/yadan_single_cycle.srcs/sources_1/imports/core/yadan_riscv.v:296]
+WARNING: [VRFC 10-3091] actual bit length 1 differs from formal bit length 32 for port 'mem_reg2_i' [C:/Users/VeriMake_C1/Desktop/yadan_single_cycle/yadan_single_cycle.srcs/sources_1/imports/core/yadan_riscv.v:298]
+Completed static elaboration
+Starting simulation data flow analysis
+WARNING: [XSIM 43-4100] "C:/Users/VeriMake_C1/Desktop/yadan_single_cycle/yadan_single_cycle.sim/sim_1/behav/xsim/glbl.v" Line 6. Module glbl has a timescale but at least one module in design doesn't have timescale.
+WARNING: [XSIM 43-4100] "C:/Users/VeriMake_C1/Desktop/yadan_single_cycle/yadan_single_cycle.sim/sim_1/behav/xsim/glbl.v" Line 6. Module glbl has a timescale but at least one module in design doesn't have timescale.
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module xil_defaultlib.pc_reg
+Compiling module xil_defaultlib.id
+Compiling module xil_defaultlib.regsfile
+Compiling module xil_defaultlib.ex
+Compiling module xil_defaultlib.absolute_value
+Compiling module xil_defaultlib.long_slow_div_denom_reg
+Compiling module xil_defaultlib.mul_div_32
+Compiling module xil_defaultlib.mem
+Compiling module xil_defaultlib.csr_reg
+Compiling module xil_defaultlib.yadan_riscv
+Compiling module xil_defaultlib.glbl
+Built simulation snapshot yadan_riscv_behav

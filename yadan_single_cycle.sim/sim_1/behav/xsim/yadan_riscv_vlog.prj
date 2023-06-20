@@ -1,0 +1,18 @@
+# compile verilog/system verilog design source files
+verilog xil_defaultlib  \
+"../../../../yadan_single_cycle.srcs/sources_1/imports/muldiv/absolute_value.v" \
+"../../../../yadan_single_cycle.srcs/sources_1/imports/core/csr_reg.v" \
+"../../../../yadan_single_cycle.srcs/sources_1/imports/core/ex.v" \
+"../../../../yadan_single_cycle.srcs/sources_1/imports/core/id.v" \
+"../../../../yadan_single_cycle.srcs/sources_1/imports/muldiv/long_slow_div_denom_reg.v" \
+"../../../../yadan_single_cycle.srcs/sources_1/imports/core/mem.v" \
+"../../../../yadan_single_cycle.srcs/sources_1/imports/muldiv/mul_div_32.v" \
+"../../../../yadan_single_cycle.srcs/sources_1/imports/core/pc_reg.v" \
+"../../../../yadan_single_cycle.srcs/sources_1/imports/core/regsfile.v" \
+"../../../../yadan_single_cycle.srcs/sources_1/imports/core/yadan_riscv.v" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort

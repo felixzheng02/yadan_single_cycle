@@ -1,0 +1,7 @@
+Running: xsim.dir/yadan_riscv_behav/xsimk.exe -simmode gui -wdb yadan_riscv_behav.wdb -simrunnum 0 -socket 49944
+Design successfully loaded
+Design Loading Memory Usage: 6128 KB (Peak: 6128 KB)
+Design Loading CPU Usage: 62 ms
+Simulation completed
+Simulation Memory Usage: 6852 KB (Peak: 6852 KB)
+Simulation CPU Usage: 312 ms
