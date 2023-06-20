@@ -32,57 +32,20 @@ SOFTWARE.
 
 module ctrl(
     input   wire                rst,
-    input   wire                stallreq_from_id,
-    input   wire                stallreq_from_ex,
-    input   wire                stallreq_from_if,
-    input   wire                stallreq_from_mem,
-    input   wire                stallreq_from_interrupt,
-    input   wire                stallreq_from_jtag,
-
     input   wire                branch_flag_i,
     input   wire[`InstAddrBus]  branch_addr_i,
-
-    input   wire                jtag_halt_i,
-
     output  reg                 branch_flag_o,
-    output  reg[`InstAddrBus]   branch_addr_o,
-
-    output  reg[5:0]            stalled_o
+    output  reg[`InstAddrBus]   branch_addr_o
 );
 
     always @ (*) begin
         if (rst == `RstEnable) begin
-            stalled_o       = 6'b000000;
             branch_flag_o   = `BranchDisable;
             branch_addr_o   = `ZeroWord;
         end else begin
             branch_flag_o   = branch_flag_i;
             branch_addr_o   = branch_addr_i;
-            // stalled_o       = 6'b000000;
-
-            if (stallreq_from_mem == `Stop || jtag_halt_i == `Stop) begin //&& branch_flag_i == `BranchDisable) begin  
-                // flush_o     =  6'b000100;
-                stalled_o   =  6'b011111;
-            end
-            else 
-            
-            if (stallreq_from_ex == `Stop && branch_flag_i == `BranchDisable) begin
-                stalled_o   =  6'b001111;
-            end
-            else 
-            if (stallreq_from_id == `Stop && branch_flag_i == `BranchDisable) begin    
-                // flush_o     =  6'b000010;
-                stalled_o   =  6'b000111;
-            end 
-            else if (stallreq_from_if == `Stop || stallreq_from_interrupt == `Stop || stallreq_from_jtag == `Stop) begin
-                stalled_o   =  6'b000111;
-            end
-            else begin
-                stalled_o   = 6'b000000;
-                // flush_o     = 6'b000000;
-            end            
         end
-
     end
 
 endmodule // ctrl

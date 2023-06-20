@@ -100,6 +100,15 @@
           <Attr Name="UsedIn" Val="simulation"/>
         </FileInfo>
       </File>
+      <File Path="$PSRCDIR/sources_1/imports/core/ctrl.v">
+        <FileInfo>
+          <Attr Name="ImportPath" Val="$PPRDIR/../yadan/module/core/ctrl.v"/>
+          <Attr Name="ImportTime" Val="1686585554"/>
+          <Attr Name="UsedIn" Val="synthesis"/>
+          <Attr Name="UsedIn" Val="implementation"/>
+          <Attr Name="UsedIn" Val="simulation"/>
+        </FileInfo>
+      </File>
       <File Path="$PSRCDIR/sources_1/imports/core/ex.v">
         <FileInfo>
           <Attr Name="ImportPath" Val="$PPRDIR/../yadan/module/core/ex.v"/>
@@ -189,7 +198,6 @@
       <File Path="$PSRCDIR/sources_1/imports/core/cpu_ahb_if.v">
         <FileInfo>
           <Attr Name="UserDisabled" Val="1"/>
-          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="ImportPath" Val="$PPRDIR/../yadan/module/core/cpu_ahb_if.v"/>
           <Attr Name="ImportTime" Val="1686585576"/>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -200,20 +208,8 @@
       <File Path="$PSRCDIR/sources_1/imports/core/cpu_ahb_mem.v">
         <FileInfo>
           <Attr Name="UserDisabled" Val="1"/>
-          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="ImportPath" Val="$PPRDIR/../yadan/module/core/cpu_ahb_mem.v"/>
           <Attr Name="ImportTime" Val="1686585574"/>
-          <Attr Name="UsedIn" Val="synthesis"/>
-          <Attr Name="UsedIn" Val="implementation"/>
-          <Attr Name="UsedIn" Val="simulation"/>
-        </FileInfo>
-      </File>
-      <File Path="$PSRCDIR/sources_1/imports/core/ctrl.v">
-        <FileInfo>
-          <Attr Name="UserDisabled" Val="1"/>
-          <Attr Name="AutoDisabled" Val="1"/>
-          <Attr Name="ImportPath" Val="$PPRDIR/../yadan/module/core/ctrl.v"/>
-          <Attr Name="ImportTime" Val="1686585554"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -222,7 +218,6 @@
       <File Path="$PSRCDIR/sources_1/imports/core/interrupt_ctrl.v">
         <FileInfo>
           <Attr Name="UserDisabled" Val="1"/>
-          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="ImportPath" Val="$PPRDIR/../yadan/module/core/interrupt_ctrl.v"/>
           <Attr Name="ImportTime" Val="1686585561"/>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -233,7 +228,6 @@
       <File Path="$PSRCDIR/sources_1/imports/core/mem_wb.v">
         <FileInfo>
           <Attr Name="UserDisabled" Val="1"/>
-          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="ImportPath" Val="$PPRDIR/../yadan/module/core/mem_wb.v"/>
           <Attr Name="ImportTime" Val="1686585562"/>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -244,7 +238,6 @@
       <File Path="$PSRCDIR/sources_1/imports/core/ex_mem.v">
         <FileInfo>
           <Attr Name="UserDisabled" Val="1"/>
-          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="ImportPath" Val="$PPRDIR/../yadan/module/core/ex_mem.v"/>
           <Attr Name="ImportTime" Val="1686585550"/>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -255,7 +248,6 @@
       <File Path="$PSRCDIR/sources_1/imports/core/id_ex.v">
         <FileInfo>
           <Attr Name="UserDisabled" Val="1"/>
-          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="ImportPath" Val="$PPRDIR/../yadan/module/core/id_ex.v"/>
           <Attr Name="ImportTime" Val="1686585547"/>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -266,7 +258,6 @@
       <File Path="$PSRCDIR/sources_1/imports/core/if_id.v">
         <FileInfo>
           <Attr Name="UserDisabled" Val="1"/>
-          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="ImportPath" Val="$PPRDIR/../yadan/module/core/if_id.v"/>
           <Attr Name="ImportTime" Val="1686585558"/>
           <Attr Name="UsedIn" Val="synthesis"/>
@@ -277,7 +268,6 @@
       <File Path="$PSRCDIR/sources_1/imports/core/rst_sync.v">
         <FileInfo>
           <Attr Name="UserDisabled" Val="1"/>
-          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="ImportPath" Val="$PPRDIR/../yadan/module/core/rst_sync.v"/>
           <Attr Name="ImportTime" Val="1686585569"/>
           <Attr Name="UsedIn" Val="synthesis"/>

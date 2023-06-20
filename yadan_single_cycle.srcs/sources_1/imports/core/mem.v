@@ -42,9 +42,6 @@ module mem(
     input   wire[`DataAddrBus]  mem_mem_addr_i,
     input   wire[`RegBus]       mem_reg2_i,
 
-    //input wire int_assert_i,                // 中断发生标志
-    // input wire[`InstAddrBus] int_addr_i,    // 中断跳转地址
-
     // from ram 
     input   wire[`DataBus]      mem_data_i,
 

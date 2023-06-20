@@ -131,49 +131,64 @@ module yadan_riscv(
         .rdata2_o(reg_id_data_2)
     );
 
+    // mul_div to ex
+    wire[`DoubleRegBus] md_ex_result;
+    wire                md_ex_done;
+    // ex to mul_div   
+    wire   ex_md_enable;
+    wire   [31 : 0]  ex_md_dividend;        
+    wire   [31 : 0]  ex_md_divisor;        
+    wire   ex_md_mul0_div_1;
+    wire   ex_md_x_signed0_unsigned1;
+    wire   ex_md_y_signed0_unsigned1;
+    // ex/mem
+    wire                    ex_mem_regwrite;
+    wire[`RegAddrBus]       ex_mem_regwriteaddr;
+    wire[`RegBus]           ex_mem_regwritedata;
+    wire[`AluOpBus]         ex_mem_aluop;
+    wire[`DataAddrBus]      ex_mem_dataaddr;
+    wire[`RegBus]           ex_mem_reg2;
+    // ex/csr
+    wire                    ex_csr_write;
+    wire[`DataAddrBus]      ex_csr_addr;
+    wire[`RegBus]           ex_csr_data;
+
     // EX 模块例化
     ex  u_ex(
         .rst(rst),
-
-        // 从 ID/EX 模块来的信息
-        .ex_pc(id_pc_o),
-        .ex_inst(id_inst_o),
-        .aluop_i(id_aluop_o),
-        .alusel_i(id_alusel_o),
-        .reg1_i(id_reg1_o),
-        .reg2_i(id_reg2_o),
-        .wd_i(id_wd_o),
-        .wreg_i(id_wreg_o),
-        .wcsr_reg_i(id_wcsr_reg_o),
-        .csr_reg_i(id_csr_reg_o),
-        .wd_csr_reg_i(id_wd_csr_reg_o),
-        
+        // from id
+        .ex_pc(id_ex_pc),
+        .ex_inst(id_ex_inst),
+        .aluop_i(id_ex_aluop),
+        .alusel_i(id_ex_alusel),
+        .reg1_i(id_ex_regdata_1),
+        .reg2_i(id_ex_regdata_2),
+        .wd_i(id_ex_regwritedata),
+        .wreg_i(id_ex_regwrite),
+        .wcsr_reg_i(id_ex_csrwrite),
+        .csr_reg_i(id_ex_csrreg),
+        .wd_csr_reg_i(id_ex_csrwritedata),
         //from mul_div
-        .muldiv_result_i(muldiv_result_i),
-        .muldiv_done(muldiv_done),
-
+        .muldiv_result_i(md_ex_result),
+        .muldiv_done(md_ex_done),
         //to mul_div
-
-//        .muldiv_start_o(enable_in),
-        .muldiv_dividend_o(dividend),
-        .muldiv_divisor_o(divisor),
-        .mul_or_div(mul0_div1),
-        .muldiv_reg1_signed0_unsigned1(x_signed0_unsigned1),
-        .muldiv_reg2_signed0_unsigned1(y_signed0_unsigned1),
-
-        // 输出到 ID/MEM 模块的信息
-        .wd_o(ex_wd_o),
-        .wreg_o(ex_wreg_o),
-        .wdata_o(ex_wdata_o),
-
-        .ex_aluop_o(ex_aluop_o),
-        .ex_mem_addr_o(ex_addr_o),
-        .ex_reg2_o(ex_reg2_o),
-
+        .muldiv_start_o(ex_md_enable),
+        .muldiv_dividend_o(ex_md_dividend),
+        .muldiv_divisor_o(ex_md_divisor),
+        .mul_or_div(ex_md_mul0_div1),
+        .muldiv_reg1_signed0_unsigned1(ex_md_x_signed0_unsigned1),
+        .muldiv_reg2_signed0_unsigned1(ex_md_y_signed0_unsigned1),
+        // to mem
+        .wd_o(ex_mem_regwriteaddr),
+        .wreg_o(ex_mem_regwrite),
+        .wdata_o(ex_mem_regwritedata),
+        .ex_aluop_o(ex_mem_aluop),
+        .ex_mem_addr_o(ex_mem_dataaddr),
+        .ex_reg2_o(ex_mem_reg2),
         // to csr reg
-        .wcsr_reg_o(ex_wcsr_reg_o),
-        .wd_csr_reg_o(ex_wd_csr_reg_o),
-        .wcsr_data_o(ex_wcsr_data_o)
+        .wcsr_reg_o(ex_csr_write),
+        .wd_csr_reg_o(ex_csr_addr),
+        .wcsr_data_o(ex_csr_data)
     );
 
     mul_div_32  u_mul_div_32 (
@@ -233,7 +248,16 @@ module yadan_riscv(
         
         .rdata_o(csr_reg_data_o)
     );
-
+    
+    ctrl u_ctrl(
+        .rst(rst),
+        .branch_flag_i(ex_branch_flag_o),
+        .branch_addr_i(ex_branch_addr_o),
+        // ctrl to pc_reg
+        .branch_flag_o(ctrl_branch_flag_o),
+        .branch_addr_o(ctrl_branch_addr_o)
+    );
+    
     rom instr_mem(
         .addr(id_rom_pc),
         .dout(rom_id_instr)
