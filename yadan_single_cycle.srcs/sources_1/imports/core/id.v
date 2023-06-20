@@ -37,12 +37,6 @@ module id(
     // read regs form regfile
     input   wire[`RegBus]           reg1_data_i,
     input   wire[`RegBus]           reg2_data_i,
-    // load 相关
-    input   wire[`AluOpBus]         ex_aluop_i,
-    // from wd mem
-    input   wire                    mem_wreg_i,
-    input   wire[`RegBus]           mem_wdata_i,
-    input   wire[`RegAddrBus]       mem_wd_i,
     // from csr
     input   wire[`RegBus]           csr_reg_data_i,
     
@@ -54,7 +48,6 @@ module id(
     output  reg[`RegAddrBus]        reg1_addr_o,
     output  reg[`RegAddrBus]        reg2_addr_o,
     // output execution
-    output  wire                    stallreq,
     output  wire[`InstAddrBus]       pc_o,
     output  reg[`InstBus]           inst_o,
     output  reg[`AluOpBus]          aluop_o,
@@ -84,23 +77,8 @@ module id(
 
     // 指示指令是否有效
     reg     instvalid;
-
-    // load 相关
-    reg     reg1_loadralate;
-    reg     reg2_loadralate;
-    wire    pre_inst_is_load;
-    assign  stallreq = reg1_loadralate | reg2_loadralate;
-    assign pre_inst_is_load = ( (ex_aluop_i == `EXE_LB) ||
-                                (ex_aluop_i == `EXE_LH) ||
-                                (ex_aluop_i == `EXE_LW) ||
-                                (ex_aluop_i == `EXE_LBU)||
-                                (ex_aluop_i == `EXE_LHU)||
-                                (ex_aluop_i == `EXE_SB) ||
-                                (ex_aluop_i == `EXE_SH) ||
-                                (ex_aluop_i == `EXE_SW)) ? 1'b1 : 1'b0;
     
     assign pc_o = pc_i;//202167 修改，将pc_o 原来有跳转清零改
-
 
     //*******   对指令译码    *******//
     always @ (*) begin

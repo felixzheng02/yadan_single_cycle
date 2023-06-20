@@ -41,8 +41,11 @@ module yadan_riscv(
       , input  wire         jtag_reset_i   
 );
 
-    wire[`RegBus]   instr ;
-    wire[`InstAddrBus]      pc;
+    wire[`RegBus]   rom_id_instr ;
+    wire[`InstAddrBus]      pc_id_pc;
+    wire[`InstAddrBus]      id_rom_pc;
+    wire[`RegBus]           reg_id_data_1;
+    wire[`RegBus]           reg_id_data_2;
     
     // pc_reg 例化
     pc_reg  u_pc_reg(
@@ -52,57 +55,60 @@ module yadan_riscv(
         .branch_addr_i(ctrl_branch_addr_o),
         .pc_o(pc)
     );
-
-    assign  rom_addr_o  =  pc;  // 指令存储器的输入地址就是 pc 的值
+    
+    // id/csr
+    wire[`DataAddrBus]      id_csr_addr;
+    wire[`RegBus]           csr_id_data;
+    // id/reg
+    wire id_reg_read_1;
+    wire id_reg_read_2;
+    wire[`RegAddrBus]       id_reg_addr_1;
+    wire[`RegAddrBus]       id_reg_addr_2;
+    // id/ex
+    wire[`InstAddrBus]      id_ex_pc;
+    wire[`InstBus]          id_ex_inst;
+    wire[`AluOpBus]         id_ex_aluop;
+    wire[`AluSelBus]        id_ex_alusel;
+    wire[`RegBus]           id_ex_regdata_1;
+    wire[`RegBus]           id_ex_regdata_2;
+    wire                    id_ex_regwrite;
+    wire[`RegAddrBus]       id_ex_regwritedata;
+    wire                    id_ex_csrwrite;
+    wire[`RegBus]           id_ex_csrreg;
+    wire[`DataAddrBus]      id_ex_csrwritedata;
 
     // ID 例化
     id  u_id(
         .rst(rst),
-        .pc_i(pc),
-        .inst_i(instr),
+        .pc_i(pc_id_pc),
+        .inst_i(rom_id_instr),
         
         // from regfile 模块的输入
-        .reg1_data_i(reg1_data_o),
-        .reg2_data_i(reg2_data_o),
-
-        // from ex
-        .ex_wreg_i(ex_wreg_o),
-        .ex_wdata_i(ex_wdata_o),
-        .ex_wd_i(ex_wd_o),
-//        .ex_branch_flag_i(ex_branch_flag_o),
-
-        .ex_aluop_i(ex_aluop_o),
-
-        // from wd mem
-        .mem_wreg_i     (mem_wreg_o),
-        .mem_wdata_i    (mem_wdata_o),
-        .mem_wd_i       (mem_wd_o),
+        .reg1_data_i(reg_id_data_1),
+        .reg2_data_i(reg_id_data_2),
 
         // from csr_reg
-        .csr_reg_data_i(csr_reg_data_o),
-        .csr_reg_addr_o(id_csr_reg_addr_o),
+        .csr_reg_data_i(csr_id_data),
+        .csr_reg_addr_o(id_csr_addr),
 
         // 送入 regfile 的信息
-        .reg1_read_o(id_reg1_read_o),
-        .reg2_read_o(id_reg2_read_o),
-        .reg1_addr_o(id_reg1_addr_o),
-        .reg2_addr_o(id_reg2_addr_o),
-
-//        .stallreq(stallreq_from_id),
-
-        .pc_o(id_pc_o),
-        .inst_o(id_inst_o),
-        .aluop_o(id_aluop_o),
-        .alusel_o(id_alusel_o),
-        .reg1_o(id_reg1_o),
-        .reg2_o(id_reg2_o),
-        .reg_wd_o(id_wd_o),
-        .wreg_o(id_wreg_o),
-
-         // 送到 ID/EX 的信息
-        .wcsr_reg_o(id_wcsr_reg_o),
-        .csr_reg_o(id_csr_reg_o),
-        .wd_csr_reg_o(id_wd_csr_reg_o)
+        .reg1_read_o(id_reg_read_1),
+        .reg2_read_o(id_reg_read_2),
+        .reg1_addr_o(id_reg_addr_1),
+        .reg2_addr_o(id_reg_addr_2),
+        
+        // to execution
+        .pc_o(id_ex_pc),
+        .inst_o(id_ex_inst),
+        .aluop_o(id_ex_aluop),
+        .alusel_o(id_ex_alusel),
+        .reg1_o(id_ex_regdata_1),
+        .reg2_o(id_ex_regdata_2),
+        .reg_wd_o(id_ex_regwritedata),
+        .wreg_o(id_ex_regwrite),
+        .wcsr_reg_o(id_ex_csrwrite),
+        .csr_reg_o(id_ex_csrreg),
+        .wd_csr_reg_o(id_ex_csrwritedata)
     );
 
     // 通用寄存器 regfile 例化
@@ -233,10 +239,11 @@ module yadan_riscv(
     );
 
     rom instr_mem(
-        .addr(pc),
-        .dout(instr)
+        .addr(id_rom_pc),
+        .dout(rom_id_instr)
     );
     
+    // needs modification
     ram data_mem(
         .addr(pc),
         .dout(instr)
