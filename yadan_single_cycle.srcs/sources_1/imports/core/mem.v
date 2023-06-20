@@ -50,7 +50,6 @@ module mem(
     output  wire                mem_we_o,
     output  reg[2:0]            mem_sel_o,
     output  reg[`DataBus]       mem_data_o,
-    output  wire                 mem_ce_o,
 
     // ·Ã´æ½×¶ÎµÄ½á¹û
     output  reg[`RegAddrBus]    wd_o,

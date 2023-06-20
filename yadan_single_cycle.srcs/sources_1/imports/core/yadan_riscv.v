@@ -41,7 +41,7 @@ module yadan_riscv(
       , input  wire         jtag_reset_i   
 );
 
-    wire[`RegBus]   rom_id_instr ;
+    wire[`RegBus]           rom_id_instr ;
     wire[`InstAddrBus]      pc_id_pc;
     wire[`InstAddrBus]      id_rom_pc;
     wire[`RegBus]           reg_id_data_1;
@@ -113,17 +113,20 @@ module yadan_riscv(
         .wd_csr_reg_o(id_ex_csrwritedata)
     );
 
+    // mem/reg
+    wire                    mem_reg_write;
+    wire[`RegAddrBus]       mem_reg_addr;
+    wire[`RegBus]           mem_reg_data;
+    
     // 通用寄存器 regfile 例化
     regsfile u_regsfile
     (
         .clk(clk),
         .rst(rst),
-
-        // from wb (needs modification)
-        .we_i(mem_wreg_o),
-        .waddr_i(mem_wd_o),
-        .wdata_i(mem_wdata_o),
-        
+        // from wb
+        .we_i(mem_reg_write),
+        .waddr_i(mem_reg_addr),
+        .wdata_i(mem_reg_data),
         // from id
         .re1_i(id_reg_read_1),
         .raddr1_i(id_reg_addr_1),
@@ -212,35 +215,38 @@ module yadan_riscv(
         .enable_out              ( muldiv_done           ),
         .z                       ( muldiv_result_i       )
     );
-
+    
+    // mem/ram
+    wire[`RegBus]   ram_mem_data ;
+    wire[`RegBus]   mem_ram_addr ;
+    wire[`RegBus]   mem_ram_data ;
+    wire            mem_ram_write   ;
+    wire[2:0]       mem_ram_sel  ;
+    
     // MEM 例化
     mem u_mem(
         .rst(rst),
+        // from ex
+        .wd_i(ex_mem_regwriteaddr),
+        .wreg_i(ex_mem_regwrite),
+        .wdata_i(ex_mem_regwritedata),
+        .mem_aluop_i(ex_mem_aluop),
+        .mem_mem_addr_i(ex_mem_dataaddr),
+        .mem_reg2_i(ex_mem_reg2),
 
-        // 来自 EX/MEM 模块的信息
-        .wd_i(ex_wd_o),
-        .wreg_i(ex_wreg_o),
-        .wdata_i(ex_wdata_o),
-
-        .mem_aluop_i(ex_aluop_o),
-        .mem_mem_addr_i(ex_addr_o),
-        .mem_reg2_i(ex_reg2_o),
-
-        //.int_assert_i(interrupt_int_assert_o),
-        // 送到 MEM/WB 的信息
-        .wd_o(mem_wd_o),
-        .wreg_o(mem_wreg_o),
-        .wdata_o(mem_wdata_o),
+        // write back
+        .wd_o(mem_reg_addr),
+        .wreg_o(mem_reg_write),
+        .wdata_o(mem_reg_data),
 
         // from ram
-        .mem_data_i(ram_data_i),
+        .mem_data_i(ram_mem_data),
         
         // to ram
-        .mem_addr_o(ram_addr_o),
-        .mem_we_o(ram_we_o),
-        .mem_data_o(ram_data_o),
-        .mem_sel_o(ram_sel_o),
-        .mem_ce_o(ram_ce_o)
+        .mem_addr_o(mem_ram_addr),
+        .mem_we_o(mem_ram_write),
+        .mem_data_o(mem_ram_data),
+        .mem_sel_o(mem_ram_sel)
     );
 
     // csr_reg
@@ -273,8 +279,14 @@ module yadan_riscv(
     
     // needs modification
     ram data_mem(
-        .addr(pc),
-        .dout(instr)
+        // from ram
+        .mem_data_i(ram_mem_data),
+        
+        // to ram
+        .mem_addr_o(mem_ram_addr),
+        .mem_we_o(mem_ram_write),
+        .mem_data_o(mem_ram_data),
+        .mem_sel_o(mem_ram_sel)
     );
 
 
