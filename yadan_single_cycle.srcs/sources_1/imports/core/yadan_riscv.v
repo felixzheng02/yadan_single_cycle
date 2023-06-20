@@ -221,7 +221,7 @@ module yadan_riscv(
     wire[`RegBus]   mem_ram_addr ;
     wire[`RegBus]   mem_ram_data ;
     wire            mem_ram_write   ;
-    wire[2:0]       mem_ram_sel  ;
+
     
     // MEM ภýปฏ
     mem u_mem(
@@ -245,8 +245,7 @@ module yadan_riscv(
         // to ram
         .mem_addr_o(mem_ram_addr),
         .mem_we_o(mem_ram_write),
-        .mem_data_o(mem_ram_data),
-        .mem_sel_o(mem_ram_sel)
+        .mem_data_o(mem_ram_data)
     );
 
     // csr_reg
@@ -279,14 +278,11 @@ module yadan_riscv(
     
     // needs modification
     ram data_mem(
-        // from ram
-        .mem_data_i(ram_mem_data),
-        
-        // to ram
-        .mem_addr_o(mem_ram_addr),
-        .mem_we_o(mem_ram_write),
-        .mem_data_o(mem_ram_data),
-        .mem_sel_o(mem_ram_sel)
+        .clock(clk),
+        .wr(mem_ram_write),
+        .addr(mem_ram_addr),
+        .din(mem_ram_data),
+        .dout(ram_mem_data)
     );
 
 

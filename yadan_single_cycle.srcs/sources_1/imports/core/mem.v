@@ -48,7 +48,6 @@ module mem(
     // to ram 
     output  reg[`DataAddrBus]   mem_addr_o,
     output  wire                mem_we_o,
-    output  reg[2:0]            mem_sel_o,
     output  reg[`DataBus]       mem_data_o,
 
     // ·Ã´æ½×¶ÎµÄ½á¹û

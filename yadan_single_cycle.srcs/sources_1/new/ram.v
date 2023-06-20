@@ -26,10 +26,13 @@
 `include "yadan_defs.v"
 `endif
 
-
+    
 module ram(
-   input wire [`InstAddrBus] addr,
-   output wire [`InstBus] dout
+   input wire clock,
+   input wire wr,                          
+   input wire [`DataAddrBus] addr,    
+   input wire [`DataBus] din,           
+   output wire [`DataBus] dout            
    );
 
 
