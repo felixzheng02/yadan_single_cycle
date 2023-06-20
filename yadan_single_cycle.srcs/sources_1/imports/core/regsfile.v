@@ -35,8 +35,6 @@ module regsfile
     input   wire        clk,
     input   wire        rst,
 
-    //input wire int_assert_i,                // 中断发生标志
-
     // write port 回写
     input   wire                we_i,   
     input   wire[`RegAddrBus]   waddr_i,

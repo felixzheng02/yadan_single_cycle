@@ -116,23 +116,19 @@ module yadan_riscv(
     (
         .clk(clk),
         .rst(rst),
-        //.int_assert_i(interrupt_int_assert_o),
+
+        // from wb (needs modification)
         .we_i(mem_wreg_o),
         .waddr_i(mem_wd_o),
         .wdata_i(mem_wdata_o),
-
-        .re1_i(id_reg1_read_o),
-        .raddr1_i(id_reg1_addr_o),
-        .rdata1_o(reg1_data_o),
-
-        .re2_i(id_reg2_read_o),
-        .raddr2_i(id_reg2_addr_o),
-        .rdata2_o(reg2_data_o),
-        .jtag_we_i(jtag_we_i),
-        .jtag_addr_i(jtag_addr_i),
-        .jtag_wdata_i(jtag_wdata_i),
-        .jtag_rdata_o(jtag_rdata_o)
-        // .jtag_done_o(jtag_done_o)
+        
+        // from id
+        .re1_i(id_reg_read_1),
+        .raddr1_i(id_reg_addr_1),
+        .rdata1_o(reg_id_data_1),
+        .re2_i(id_reg_read_2),
+        .raddr2_i(id_reg_addr_2),
+        .rdata2_o(reg_id_data_2)
     );
 
     // EX Ä£¿éÀı»¯
