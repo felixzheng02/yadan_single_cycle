@@ -33,133 +33,33 @@ SOFTWARE.
 module yadan_riscv(
         input   wire            clk
         ,input   wire            rst
+
+      , input  wire         jtag_we_i
+      , input  wire  [4:0]  jtag_addr_i
+      , input  wire  [31:0] jtag_wdata_i
+      , output wire  [31:0] jtag_rdata_o
+      , input  wire         jtag_reset_i   
 );
 
-    wire[`RegBus]   rom_data_i ;
-    wire[`RegBus]   rom_addr_o ;
-    wire            rom_ce_o   ;
-
-    wire[`RegBus]   ram_data_i ;
-    wire[`RegBus]   ram_addr_o ;
-    wire[`RegBus]   ram_data_o ;
-    wire            ram_we_o   ;
-    wire[2:0]       ram_sel_o  ;
-    wire            ram_ce_o   ;
-
-    // 连接 IF/ID 模块与译码阶段 ID 模块的变量
-    wire[`InstAddrBus]      pc_pc_o;
-    wire[`InstAddrBus]      if_id_pc_o;
-    wire[`InstBus]          if_id_inst_o;
-
-
-    // 连接译码阶段 ID 模块输出与 ID/EX 模块的输入的变量
-    wire[`InstAddrBus]      id_pc_o;
-    wire[`InstBus]          id_inst_o;
-    wire[`AluOpBus]         id_aluop_o;
-    wire[`AluSelBus]        id_alusel_o;
-    wire[`RegBus]           id_reg1_o;
-    wire[`RegBus]           id_reg2_o;
-    wire                    id_wreg_o;
-    wire[`RegAddrBus]       id_wd_o;
-    wire                    id_wcsr_reg_o;
-    wire[`RegBus]           id_csr_reg_o;
-    wire[`DataAddrBus]      id_wd_csr_reg_o;
-
-    // 连接 ID/EX 模块输出与执行阶段 EX 模块的输入变量
-    wire[`InstAddrBus]      ex_pc_i;
-    wire[`InstBus]          ex_inst_i;
-    wire[`AluOpBus]         ex_aluop_i;
-    wire[`AluSelBus]        ex_alusel_i;
-    wire[`RegBus]           ex_reg1_i;
-    wire[`RegBus]           ex_reg2_i;
-    wire                    ex_wreg_i;
-    wire[`RegAddrBus]       ex_wd_i;
-    wire                    ex_wcsr_reg_i;
-    wire[`RegBus]           ex_csr_reg_i;
-    wire[`DataAddrBus]      ex_wd_csr_reg_i;
-
-    // 连接执行阶段 EX 模块的输出与 EX/MEM 模块的输入变量
-    wire                    ex_wreg_o;
-    wire[`RegAddrBus]       ex_wd_o;
-    wire[`RegBus]           ex_wdata_o;
-
-    wire[`AluOpBus]         ex_mem_aluop_o;
-    wire[`DataAddrBus]      ex_addr_o;
-    wire[`RegBus]           ex_mem_reg2_o;
-
-    //from mul_div
-    wire[`DoubleRegBus] muldiv_result_i;
-    wire                muldiv_done;
-
-    // mul_div_32 Inputs      
-    wire   [31 : 0]  dividend;        
-    wire   [31 : 0]  divisor;        
-    wire   mul0_div1;
-    wire   x_signed0_unsigned1;
-    wire   y_signed0_unsigned1;
-
-    // mul_div_32 Outputs
-    wire  enable_out;    
-
-    // csr_reg
-    wire[`RegBus]           csr_reg_data_o;
-    wire[`RegBus]           csr_interrupt_data_o;
-
-    wire[`RegBus]         csr_mtvec;    
-    wire[`RegBus]         csr_mepc;     
-    wire[`RegBus]         csr_mstatus; 
-    
-    // id to csr
-    wire[`DataAddrBus]      id_csr_reg_addr_o;
-    // ex to csr 
-    wire                    ex_wcsr_reg_o;
-    wire[`DataAddrBus]      ex_wd_csr_reg_o;
-    wire[`RegBus]           ex_wcsr_data_o;
-
-    // 连接 EX/MEM 模块的输出与访存阶段 MEM 模块的输入的变量
-    wire                    mem_wreg_i;
-    wire[`RegAddrBus]       mem_wd_i;
-    wire[`RegBus]           mem_wdata_i;
-
-    wire[`AluOpBus]         mem_aluop_i;
-    wire[`DataAddrBus]      mem_mem_addr_i;
-    wire[`RegBus]           mem_reg2_i;
-
-    // 连接访存阶段 MEM 模块的输出与 MEM/WB 模块的输入变量
-    wire                    mem_wreg_o;
-    wire[`RegAddrBus]       mem_wd_o;
-    wire[`RegBus]           mem_wdata_o;
-
-
-    // 连接 MEM/WB 模块的输出与回写阶段输入变量
-    wire                    wb_wreg_i;
-    wire[`RegAddrBus]       wb_wd_i;
-    wire[`RegBus]           wb_wdata_i;
-
-    // 连接译码阶段 ID 模块与通用寄存器 Regfile 模块的变量
-    wire                    id_reg1_read_o;
-    wire                    id_reg2_read_o;
-    wire[`RegAddrBus]       id_reg1_addr_o;
-    wire[`RegAddrBus]       id_reg2_addr_o;
-    wire[`RegBus]           reg1_data_o;
-    wire[`RegBus]           reg2_data_o;
+    wire[`RegBus]   instr ;
+    wire[`InstAddrBus]      pc;
     
     // pc_reg 例化
     pc_reg  u_pc_reg(
         .clk(clk),
         .rst(rst),
-        .PCchange_enable(~ram_ce_o),
-        .pc_o(pc_id_pc),
-        .ce_o(rom_ce_o)
+        .branch_flag_i(ctrl_branch_flag_o),
+        .branch_addr_i(ctrl_branch_addr_o),
+        .pc_o(pc)
     );
 
-    assign  rom_addr_o  =  pc_pc_o;  // 指令存储器的输入地址就是 pc 的值
+    assign  rom_addr_o  =  pc;  // 指令存储器的输入地址就是 pc 的值
 
     // ID 例化
     id  u_id(
         .rst(rst),
-        .pc_i(pc_pc_o),
-        .inst_i(rom_data_i),
+        .pc_i(pc),
+        .inst_i(instr),
         
         // from regfile 模块的输入
         .reg1_data_i(reg1_data_o),
@@ -221,7 +121,12 @@ module yadan_riscv(
 
         .re2_i(id_reg2_read_o),
         .raddr2_i(id_reg2_addr_o),
-        .rdata2_o(reg2_data_o)
+        .rdata2_o(reg2_data_o),
+        .jtag_we_i(jtag_we_i),
+        .jtag_addr_i(jtag_addr_i),
+        .jtag_wdata_i(jtag_wdata_i),
+        .jtag_rdata_o(jtag_rdata_o)
+        // .jtag_done_o(jtag_done_o)
     );
 
     // EX 模块例化
@@ -326,5 +231,16 @@ module yadan_riscv(
         
         .rdata_o(csr_reg_data_o)
     );
+
+    rom instr_mem(
+        .addr(pc),
+        .dout(instr)
+    );
+    
+    ram data_mem(
+        .addr(pc),
+        .dout(instr)
+    );
+
 
 endmodule // bitty_riscv

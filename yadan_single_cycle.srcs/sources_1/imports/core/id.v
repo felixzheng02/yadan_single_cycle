@@ -34,39 +34,27 @@ module id(
     input   wire                    rst,
     input   wire[`InstAddrBus]      pc_i,
     input   wire[`InstBus]          inst_i,
-
     // read regs form regfile
     input   wire[`RegBus]           reg1_data_i,
     input   wire[`RegBus]           reg2_data_i,
-
-    // from ex
-    input   wire                    ex_wreg_i,
-    input   wire[`RegBus]           ex_wdata_i,
-    input   wire[`RegAddrBus]       ex_wd_i,
-    input   wire                    ex_branch_flag_i,
-// load 相关
+    // load 相关
     input   wire[`AluOpBus]         ex_aluop_i,
-
     // from wd mem
     input   wire                    mem_wreg_i,
     input   wire[`RegBus]           mem_wdata_i,
     input   wire[`RegAddrBus]       mem_wd_i,
-
     // from csr
     input   wire[`RegBus]           csr_reg_data_i,
-
+    
     // to csr reg
     output  reg[`DataAddrBus]       csr_reg_addr_o,
-
     // output to regfile
     output  reg                     reg1_read_o,
     output  reg                     reg2_read_o,
     output  reg[`RegAddrBus]        reg1_addr_o,
     output  reg[`RegAddrBus]        reg2_addr_o,
-
     // output execution
     output  wire                    stallreq,
-
     output  wire[`InstAddrBus]       pc_o,
     output  reg[`InstBus]           inst_o,
     output  reg[`AluOpBus]          aluop_o,
@@ -75,7 +63,6 @@ module id(
     output  reg[`RegBus]            reg2_o,
     output  reg[`RegAddrBus]        reg_wd_o,
     output  reg                     wreg_o,
-    
     output  reg                     wcsr_reg_o,
     output  reg[`RegBus]            csr_reg_o,
     output  reg[`DataAddrBus]       wd_csr_reg_o
@@ -117,7 +104,7 @@ module id(
 
     //*******   对指令译码    *******//
     always @ (*) begin
-        if (rst == `RstEnable || (ex_branch_flag_i == `BranchEnable && inst_i != `ZeroWord)) begin
+        if (rst == `RstEnable || (inst_i != `ZeroWord)) begin
             aluop_o         = `EXE_NONE;
             alusel_o        = `EXE_RES_NONE;
             reg_wd_o        = `NOPRegAddr;
@@ -752,77 +739,6 @@ module id(
 
         end     // if
     end // always
-
-
-    // 给 reg1_o 赋值的过程增加了两种情况：
-    // 1. 如果 Regfile 模块读端口 1 要读取的寄存器就是执行阶段要写的目的寄存器，那么直接把执行阶段的结果 ex_wdata_i 作为 reg1_o 的值
-    // 2. 如果 Regfile 模块读端口 1 要读取的寄存器就是访存阶段要写的目的寄存器，那么直接把访存阶段的结果 mem_wdata_i 作为 reg1_o 的值
-
-    // 确定运算的源操作数 1
-    always @ (*) begin
-            
-        if (rst == `RstEnable) begin
-            reg1_o  = `ZeroWord;
-            reg1_loadralate = `NoStop;
-        end else if (pre_inst_is_load == 1'b1 && ex_wd_i == reg1_addr_o && reg1_read_o == 1'b1) begin
-            reg1_loadralate = `Stop;  
-            reg1_o  = `ZeroWord;        
-        end else if ((reg1_read_o == 1'b1) && (reg1_addr_o == 5'b00000)) begin
-            reg1_o  = `ZeroWord;
-            reg1_loadralate = `NoStop;
-        end else if ((reg1_read_o == 1'b1) && (ex_wreg_i == 1'b1) && (ex_wd_i == reg1_addr_o)) begin
-            reg1_o  = ex_wdata_i;
-            reg1_loadralate = `NoStop;
-        end else if ((reg1_read_o == 1'b1) && (mem_wreg_i == 1'b1) && (mem_wd_i == reg1_addr_o)) begin
-            reg1_o  = mem_wdata_i;
-            reg1_loadralate = `NoStop;
-        end else if (reg1_read_o == 1'b1) begin
-            reg1_o  = reg1_data_i; 
-            reg1_loadralate = `NoStop;        // regfile port 1 output data
-        end else if (reg1_read_o == 1'b0) begin
-            reg1_o  = imm_1;                 // 立即数
-            reg1_loadralate = `NoStop;
-        end else begin
-            reg1_o  = `ZeroWord;
-            reg1_loadralate = `NoStop; 
-        end
-        
-    end
-
-    // 给 reg2_o 赋值的过程增加了两种情况：
-    // 1. 如果 Regfile 模块读端口 2 要读取的寄存器就是执行阶段要写的目的寄存器，那么直接把执行阶段的结果 ex_wdata_i 作为 reg2_o 的值
-    // 2. 如果 Regfile 模块读端口 2 要读取的寄存器就是访存阶段要写的目的寄存器，那么直接把访存阶段的结果 mem_wdata_i 作为 reg2_o 的值
-
-    // 确定运算的源操作数 2
-    always @ (*) begin
-        
-        if (rst == `RstEnable) begin
-            reg2_o  = `ZeroWord;
-            reg2_loadralate = `NoStop;
-        end else if (pre_inst_is_load == 1'b1 && ex_wd_i == reg2_addr_o && reg2_read_o == 1'b1) begin
-            reg2_loadralate = `Stop; 
-            reg2_o  = `ZeroWord; 
-        end else if ((reg2_read_o == 1'b1) && (reg2_addr_o == 5'b00000)) begin
-            reg2_o  = `ZeroWord;
-            reg2_loadralate = `NoStop;
-        end else if ((reg2_read_o == 1'b1) && (ex_wreg_i == 1'b1) && (ex_wd_i == reg2_addr_o)) begin
-            reg2_o  = ex_wdata_i;
-            reg2_loadralate = `NoStop;
-        end else if ((reg2_read_o == 1'b1) && (mem_wreg_i == 1'b1) && (mem_wd_i == reg2_addr_o)) begin
-            reg2_o  = mem_wdata_i;
-            reg2_loadralate = `NoStop;
-        end else if (reg2_read_o == 1'b1) begin
-            reg2_o  = reg2_data_i;
-            reg2_loadralate = `NoStop;
-        end else if (reg2_read_o == 1'b0) begin
-            reg2_o  = imm_2;
-            reg2_loadralate = `NoStop;
-        end else begin
-            reg2_o  = `ZeroWord;
-            reg2_loadralate = `NoStop;
-        end
-    end
-
 
 endmodule // id
 

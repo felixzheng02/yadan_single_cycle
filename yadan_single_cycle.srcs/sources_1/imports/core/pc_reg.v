@@ -33,19 +33,11 @@ SOFTWARE.
 module pc_reg(
     input       wire                clk,
     input       wire                rst,
-    input       wire                PCchange_enable,
-
     input       wire                branch_flag_i,
     input       wire[`RegBus]       branch_addr_i,
-    input       wire[5:0]           stalled,
-
-    input                           jtag_reset_i,
-
+    
     output      reg[`InstAddrBus]   pc_o,
-    output      wire                ce_o 
 );
-
-    assign  ce_o = PCchange_enable;
 
     always  @ (posedge clk) begin
         if(rst == `RstEnable) begin
@@ -55,21 +47,13 @@ module pc_reg(
             if (branch_flag_i == `BranchEnable) begin
                 pc_o    <= branch_addr_i;
                 end 
-            else if (PCchange_enable == 1'b0) begin
-                pc_o    <=  pc_o;
-            end 
-            else if (stalled[0] == `NoStop) begin
+            else begin
                 if(pc_o<=`INSTADD_END) begin
                     pc_o    <= pc_o + 4'h4;
                 end
                 else begin
                     pc_o  <=  `StartAdd;
                 end
-           end
-           else if(jtag_reset_i)
-                pc_o    <=  `StartAdd;
-           else begin
-                pc_o    <=  pc_o;
            end
         end
     end
